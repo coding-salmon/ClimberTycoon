@@ -333,3 +333,7 @@ window.onload = function() {
     var gameGoScreen = document.getElementById("gameGoScreen");
     gameGoScreen.style.opacity = 1; // 요소를 서서히 보이게 함
 };
+
+function miniGame(){
+    window.open("miniGame.html","_self");
+}

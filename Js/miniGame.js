@@ -20,14 +20,14 @@ function updateEnergyBar(energyBar, percent){
 
 
 
-document.getElementById("startGame1").addEventListener("click", function() {
+document.getElementById("startGame").addEventListener("click", function() {
     document.getElementById("gameMenu").style.display = "none"; // 메뉴 숨기기
     document.getElementById("miniGame-Container").style.display = "block"; // 게임 컨테이너 보이기
     isGameOver = false; // 게임 시작 시 게임 오버 상태를 리셋
-    startGame1(); // 게임 시작 함수 호출
+    startGame(); // 게임 시작 함수 호출
 });
 
-function startGame1() {
+function startGame() {
 // 여기에 게임 시작 로직을 구현합니다.
     var config = {
         type: Phaser.AUTO,

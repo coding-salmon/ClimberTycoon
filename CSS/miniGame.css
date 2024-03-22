@@ -56,7 +56,7 @@ body{
     transition: all 0.5s ease; /* 애니메이션 효과를 위한 transition 추가 */
 }
 
-#miniGame-Container, #miniGame-Container2 {
+#miniGame-Container, #miniGame-Container1 {
     display: none; /* 초기 상태: 숨김 */
    
     

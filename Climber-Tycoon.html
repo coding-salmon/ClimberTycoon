@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Climber-Tycoon - Game</title>
+        <link rel="stylesheet" href="./CSS/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossorigin="crossorigin">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap"
+            rel="stylesheet">
+            <!-- 파비콘 추가 -->
+        <link rel="icon" href="./Images/climb.ico" type="image/x-icon">   
+    </head>
+    <body id="gameBody">
+        <div id ="gameOverDisplay">Game over : 0</div>
+        <div id ="gameScreen">
+            <!-- 케릭터 표시 -->
+            <div id="gamaCharacter">케릭터</div>
+        </div>
+
+        <!-- 게임메뉴버튼 -->
+        <div id="gameButtons">
+            <button onclick="startClimbing()">클라이밍</button>
+            <button onclick="miniGame()">상점 (준비중)</button>
+            <button onclick="exitClimbGame()">끝내기</button>
+        </div>
+
+        <!-- 게임종료 모달창 추가 -->
+        <div id="exitGameModal" class="exitGameModal">
+            <div class="extiGameModal-content">
+                <span class="close" onclick="closeClimbGameModal()">&times;</span>
+                <p>정말 종료하시겠습니까?</p>
+                <button onclick="exitConfirm()">예</button>
+                <button onclick="closeClimbGameModal()">아니오</button>
+            </div>
+        </div>
+
+        <!-- 클라이밍 모달창 추가 -->
+        <div id="climbGameModal" class="climbGameModal">
+            <div class="climbGameModal-content">
+                <span class="close" onclick="closeGameModal()">&times;</span>
+                <p>오늘은 드디어 쉬는 날! 어디로 갈까?!</p>
+                <ul>
+                    <li><button onclick="newClimb()">클라이밍 (성향검사)</button></li>
+                    <br>
+                    <li><button onclick="miniGame()">훈련하기 (미니게임)</button></li>
+                    <br>
+                    <li><button onclick="noClimb()">오늘은... 쉰다!</button></li>
+                    <br>
+                </ul>
+            </div>
+        </div>
+
+
+
+
+
+        <!-- 배경음악추가 -->
+        <audio id="bgm">
+            <source src="./Bgm/main-bgm.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div></div>
+
+        <script src="./Js/script.js"></script>
+
+    </body>
+</html>

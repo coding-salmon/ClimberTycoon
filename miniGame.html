@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>miniGame</title>
+    <link rel="stylesheet" href="./CSS/miniGame.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    
+</head>
+<body>
+    
+
+    <div id="gameMenu">
+        <div class="menuItem" id="startGame1">홀드뿌셔!</div>
+        <div class="menuItem" id="startGame2">개발중</div>
+    </div>
+
+    <div id="miniGame-Container">
+        
+        
+        <!-- 게임창1 -->
+        <div id="gameWindow">
+        
+        </div>
+
+        <!-- 게임 화면 아래에 버튼 추가 -->
+        <div id="gameControls">
+            <button id="restartGame">다시하기</button>
+            <button id="stopGame">그만하기</button>
+        </div>
+    </div>
+    
+
+    
+    <div id="miniGame-Container2">
+        <!-- 게임창2 -->
+        <div id="gameWindow2">
+
+        </div>
+    </div>
+    
+
+    <script src="./Js/miniGame.js"></script>
+    <script src="./Js/miniGame1.js"></script>
+</body>
+</html>

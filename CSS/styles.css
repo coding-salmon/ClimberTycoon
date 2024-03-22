@@ -1,0 +1,373 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+h1{
+    font-size:4rem;
+    margin-bottom:30px;
+    color: white;
+    background-color: #FF6F61;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.menu{
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    margin-top: 0px;
+    
+}
+
+button{
+    margin:10px;
+    padding:15px 30px;
+    font-size:1.5rem;
+    border:none;
+    border-radius: 20px;
+    background-color: #FF6F61;
+    color:white;
+    cursor:pointer;
+    transition: background-color 0.3s;
+    font-family: "Cute Font", sans-serif;
+
+    /* 버튼 테두리 설정 */
+    border: 2px solid #ff6f61;
+    box-sizing: border-box;
+}
+/* 메뉴에 마우스 오버시 더 밝은색상으로 표시 */
+button:hover{
+    background-color: #FF8C7E;
+    font-weight: bold;
+}
+
+.cute-font-regular {
+    font-family: "Cute Font", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body{
+    font-family: "Cute Font", sans-serif;
+    background-image: url(../Images/main-bg.jpeg);
+    background-size: 1024px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    margin: top 30px;
+}
+
+#gameBody{
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-image: url(../Images/game-room.jpeg);
+    background-size: cover;
+}
+
+#gameOverBody{
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-image: url(../Images/gameover-bg.jpg);
+    background-size: contain top;
+    
+}
+
+
+#gameGoBody{
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-image: url(../Images/gogogo-bg.jpeg);
+    background-size: contain;
+    
+}
+
+#gameResult{
+    position: absolute;
+    width: 65%;
+    max-width: 600px;
+    min-height: min-content;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(244, 237, 237, 0.8);
+    font-size: 1.5em;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+
+#gameButtons{
+    position: fixed;
+    bottom: 120px;
+    
+    
+    
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border: 8px solid #ff6f61;
+    border-radius: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+    max-width: 900px;
+    min-width: 30%;
+    margin-top:0 auto;
+    
+}
+
+/* 모달 스타일 */
+.modal{
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 20px;
+}
+.exitGameModal{
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 20px;
+    font-size: 2em;
+    color: #ff6f61;
+    font-weight: bold;
+    text-align: center;
+}
+
+.climbGameModal{
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 20px;
+    font-size: 2em;
+    color: #ff6f61;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+    
+}
+
+
+.goHomeModal{
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 20px;
+    font-size: 2em;
+    color: #ff6f61;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+    
+}
+
+.modal-content{
+    background-color: white;
+    margin: 20% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    position: relative;
+    border-radius: 20px;
+    font-size: 2em;
+    text-align: center;
+    color: #ff6f61;
+    font-weight: bold;
+}
+.close{
+    color: #aaa;
+    float: right;
+    font-size: 2em;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color:black;
+    text-decoration: none;
+    cursor:pointer;
+
+}
+
+.contact{
+    margin: 20px;
+    padding: 10px;
+    font-size: 2em;
+    color: color-mix(in srgb, color percentage, color percentage);
+    font-weight: bold;
+    background-color: aqua;
+    border-radius: 20px;
+}
+
+.contact:hover{
+    background-color: aquamarine;
+    color: azure;
+    cursor:pointer;
+}
+
+ul{
+    list-style:none;
+    
+}
+/* 타이틀 BGM 설정부분 */
+
+#gameTitle{
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    cursor:pointer;
+}
+
+
+
+#gameCanvas{
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#gameResult{
+    position: absolute;
+}
+
+p1{
+    color: red;
+
+}
+
+#gameGoScreen {
+    opacity: 0;
+    transition: opacity 1s ease-out; /* 1초 동안 서서히 투명도가 변하도록 설정 */
+    position: absolute;
+    width: 55%;
+    max-width: 600px;
+    min-height: min-content;
+    
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(244, 237, 237, 0.8);
+    font-size: 1.5em;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+#gameGoScreen h2{
+    margin: 20px 0;
+    color: #FF6F61;
+    font-weight: bold;
+    font-size: 2.5em;
+}
+
+#gameGoScreen button{
+    display: inline-block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #58b6a5;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 80%;
+    
+}
+
+#gameGoScreen button:hover{
+    background-color: #0056b3;
+}
+
+#gameOverDisplay{
+    position: fixed; /* 요소를 고정 위치로 설정합니다. */
+    top: 5%; /* 화면의 수직 중앙에 위치하도록 합니다. */
+    left: 50%; /* 화면의 수평 중앙에 위치하도록 합니다. */
+    transform: translate(-50%, -50%); /* 요소를 수평 및 수직으로 이동하여 정확한 중앙에 위치시킵니다. */
+    z-index: 9999; /* 다른 요소들 위에 위치하도록 설정합니다. */
+    background-color: rgba(255, 255, 255, 0.8); /* 배경색을 투명하게 설정합니다. */
+    padding: 10px; /* 내부 여백을 추가합니다. */
+    border-radius: 5px; /* 모서리를 둥글게 만듭니다. */
+    font-size: 2em;
+
+}
+
+@media (max-width: 768px){
+    body{
+        background-size: cover;
+    }
+
+    #gameGoBody{
+       
+       background-size: cover;
+    }
+
+    #gameGoScreen h1{
+        font-size: 2em;
+    }
+
+    #gameGoScreen{
+    width: 70%;
+    }
+    #gameGoScreen h2{
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+}

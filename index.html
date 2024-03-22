@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Climber-Tycoon - 클라이머 키우기</title>
+        <link rel="stylesheet" href="./CSS/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossorigin="crossorigin">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap"
+            rel="stylesheet">
+            <!-- 파비콘 추가 -->
+        <link rel="icon" href="./Images/climb.ico" type="image/x-icon">   
+    </head>
+    <body>
+        <div id ="gameOverDisplay">Game over: 0</div>
+        <!-- 배경음악추가 -->
+        <audio id="bgm" autoplay="autoplay" loop="loop">
+            <source src="./Bgm/main-bgm.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div class="container">
+            
+            <h1 id="gameTitle">클라이머 키우기</h1>
+        
+            <div class="menu">
+                <button onclick="startGame()">게임시작</button>
+                <button onclick="showInstructions()">게임설명</button>
+                <button onclick="shareGame()">공유하기</button>
+                <button onclick="exitGame()">끝내기</button>
+            </div>
+            <div class="contact" onclick="insta()">made by @0._.329</div>
+        </div>
+
+        <!-- 모달 창 -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <p>클라이머 키우기는
+                    <hr>바쁜현대사회를 살아가는 클토(클라이밍에 미친토끼)의
+                    고분군투 생존기입니다.
+                    <br>
+                    <br>다양한 위험으로부터 살아남아 최고의 클라이머에 도전하십시오!</p>
+            </div>
+        </div>
+
+        <script src="./Js/script.js"></script>
+
+    </body>
+</html>

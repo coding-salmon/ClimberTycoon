@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Climber-Tycoon - GameOver</title>
+        <link rel="stylesheet" href="./CSS/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossorigin="crossorigin">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap"
+            rel="stylesheet">
+            <!-- 파비콘 추가 -->
+        <link rel="icon" href="./Images/climb.ico" type="image/x-icon">
+        <!-- html2canvas 라이브러리 추가 -->
+        <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+        
+
+    </head>
+    
+    <body id="gameOverBody">
+        <div id ="gameOverDisplay">Game over : 0</div>
+        <canvas id="gameCanvas" style="display: none;"></canvas>
+        <div id ="gameScreen">
+            <div id="gameResult">
+                <h1>게임오버!!!</h1>
+                <div id="endingContent" class="ending">
+                
+            </div>
+                </div>
+            
+        </div>
+
+        
+    
+    
+        <!-- 게임메뉴버튼 -->
+        <div id="gameButtons">
+            <button onclick="startGame()">새로하기</button>
+            <button onclick="restartGame()">이어하기</button>
+            <button onclick="shareResult()">결과공유</button>
+            <button onclick="exitClimbGame()">끝내기</button>
+        </div>
+
+        <!-- 게임종료 모달창 추가 -->
+        <div id="exitGameModal" class="exitGameModal">
+            <div class="extiGameModal-content">
+                <span class="close" onclick="closeClimbGameModal()">&times;</span>
+                <p>정말 종료하시겠습니까?</p>
+                <button onclick="exitGameOver()">예</button>
+                <button onclick="closeClimbGameModal()">아니오</button>
+            </div>
+        </div>
+
+        
+
+
+
+
+        <!-- 배경음악추가 -->
+        <audio id="bgm" autoplay="autoplay" loop="loop">
+            <source src="./Bgm/main-bgm.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div></div>
+
+        <script src="./Js/script.js"></script>
+        <script>
+            window.addEventListener("load",function(){
+                displayEndingContent();
+            })</script>
+
+
+       
+    </body>
+
+</html>

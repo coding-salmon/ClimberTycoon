@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Climber-Tycoon - mewClimb</title>
+        <link rel="stylesheet" href="./CSS/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossorigin="crossorigin">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap"
+            rel="stylesheet">
+            <!-- 파비콘 추가 -->
+        <link rel="icon" href="./Images/climb.ico" type="image/x-icon">
+        
+        
+
+    </head>
+    
+    <body id="gameGoBody">
+        <div id="gameOverDisplay">Game over : 0</div>
+        <div id ="gameGoDisplay"></div>
+        <div id ="gameGoScreen">
+            
+                <h1>당신의 선택은?!!</h1>
+                
+                
+        
+                
+            
+        </div>
+
+        
+    
+    
+        <!-- 게임메뉴버튼 -->
+        <div id="gameButtons">
+        
+            <button onclick="goHomeModal()">돌아가기</button>
+        </div>
+
+        <!-- goHome 모달창 추가 -->
+        <div id="goHomeModal" class="goHomeModal">
+            <div class="goHomeModal-content">
+                <span class="close" onclick="closeGoHomeModal()">&times;</span>
+                <p>집으로 돌아가시겠습니까?</p>
+                <button onclick="goHome()">예</button>
+                <button onclick="closeGoHomeModal()">아니오</button>
+            </div>
+        </div>
+
+        
+
+
+
+
+        <!-- 배경음악추가 -->
+        <audio id="bgm" autoplay="autoplay" loop="loop">
+            <source src="./Bgm/main-bgm.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div></div>
+
+        <script src="./Js/script.js"></script>
+        <script src="./Js/test.js"></script>
+        
+
+
+    
+    </body>
+
+</html>

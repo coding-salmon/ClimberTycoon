@@ -122,17 +122,16 @@ function create() {
 }
 
     function startGameLogic(scoreText, timerText) {
-        // 홀드 생성
-        const createHold = () => {
-        var holdSize = Phaser.Math.Between(50, 200);
-        var holdX = Phaser.Math.Between(0, this.sys.game.config.width - holdSize);
-        var holdY = Phaser.Math.Between(0, this.sys.game.config.height - holdSize);
-        var holdColor = Phaser.Display.Color.RandomRGB(0, 255);
-        var requiredTouches = Phaser.Math.Between(1, 10); // 랜덤한 터치 횟수 설정
-        var baseScore = (requiredTouches <= 10) ? 100 : 50; // 터치 횟수와 크기에 따른 기본 점수 설정
-    
-        var hold = this.add.rectangle(holdX, holdY, holdSize, holdSize, holdColor.color).setInteractive();
-
+          // 홀드 생성
+          const createHold = () => {
+            var holdSize = Phaser.Math.Between(50, 200);
+            var holdX = Phaser.Math.Between(0, this.sys.game.config.width - holdSize);
+            var holdY = Phaser.Math.Between(0, this.sys.game.config.height - holdSize);
+            var holdColor = Phaser.Display.Color.RandomRGB(0, 255);
+            var requiredTouches = Phaser.Math.Between(1, 10); // 랜덤한 터치 횟수 설정
+            var baseScore = (requiredTouches <= 10) ? 100 : 50; // 터치 횟수와 크기에 따른 기본 점수 설정
+        
+            var hold = this.add.rectangle(holdX, holdY, holdSize, holdSize, holdColor.color).setInteractive();
 
         
         
@@ -152,7 +151,7 @@ function create() {
                 
                 // 홀드 제거 성공 시 추가 시간 1초 부여
                 if (timer < 3) {
-                    timer += 0.5; // 초 추가
+                    timer += 1; // 초 추가
                     timerText.setText('Time: ' + timer + 's'); // 시간 텍스트 업데이트
                     updateEnergyBar(energyBar,timer/maxTime);
                 }
@@ -177,7 +176,7 @@ function create() {
  // 게임 시작 시, 그리고 이후 1~2초마다 랜덤으로 홀드 생성
  const scheduleNextHold = () => {
     createHold(); // 즉시 홀드 생성
-    let nextDelay = Phaser.Math.Between(100, 300); // 다음 홀드 생성까지의 시간 (1~3초)
+    let nextDelay = Phaser.Math.Between(500, 1000); // 다음 홀드 생성까지의 시간 (1~3초)
     this.time.delayedCall(nextDelay, scheduleNextHold, [], this); // 다음 홀드 생성 예약
 };
 

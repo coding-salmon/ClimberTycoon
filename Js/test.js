@@ -172,7 +172,7 @@ const copyButton = document.createElement("button");
 copyButton.textContent = "결과 복사하기";
 copyButton.onclick = function () {
     navigator.clipboard.writeText(resultsSummary).then(() => {
-            alert("결과가 클립보드에 복사되었습니다. Ctrl + V를 사용해 붙여넣기 해보세요!");
+            alert("결과 복사 완료. 개발자한테 결과공유하기 Ctrl + V를 해주세요!");
         })
         .catch(err => {
             console.error('클립보드 복사 실패:', err);

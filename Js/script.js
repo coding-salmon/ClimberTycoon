@@ -65,7 +65,7 @@ function insta(){
 
 
 function startGame(){
-    window.open("climber-Tycoon.html","_blank");
+    window.open("climber-Tycoon.html","_self");
 
     // 게임오버 횟수 초기화
     localStorage.setItem('gameOverCount', '0');

@@ -221,3 +221,18 @@ function gameOver(finalScore) {
 //     );
 //     bufferLoader.load();
 // 
+
+
+function goHomeModal(){
+    document.getElementById("goHomeModal").style.display='block';
+
+}
+
+function closeGoHomeModal(){
+    document.getElementById("goHomeModal").style.display='none';
+}
+
+
+function goHome(){
+    window.open("climber-Tycoon.html","_self");
+}

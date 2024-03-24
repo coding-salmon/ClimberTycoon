@@ -8,6 +8,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossorigin="crossorigin">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap"
+            rel="stylesheet">
+            <!-- 파비콘 추가 -->
+        <link rel="icon" href="./Images/climb.ico" type="image/x-icon">   
     
 </head>
 <body>
@@ -26,11 +36,7 @@
         
         </div>
 
-        <!-- 게임 화면 아래에 버튼 추가 -->
-        <div id="gameControls">
-            <button id="restartGame">다시하기</button>
-            <button id="stopGame">그만하기</button>
-        </div>
+    
     </div>
     
 
@@ -41,6 +47,24 @@
 
         </div>
     </div>
+<div id="bottom">
+    <!-- 게임메뉴버튼 -->
+    <div id="gameButtons">
+        <button onclick="restartGame()">다시하기</button>
+        <button onclick="goHomeModal()">돌아가기</button>
+    </div>
+</div>
+
+     <!-- goHome 모달창 추가 -->
+     <div id="goHomeModal" class="goHomeModal">
+        <div class="goHomeModal-content">
+            <span class="close" onclick="closeGoHomeModal()">&times;</span>
+            <p>집으로 돌아가시겠습니까?</p>
+            <button onclick="goHome()">예</button>
+            <button onclick="closeGoHomeModal()">아니오</button>
+        </div>
+    </div>
+
 
      <!-- 배경음악추가 -->
      <audio id="bgm" autoplay="autoplay" loop="loop">

@@ -221,7 +221,6 @@ saveEndingContent("noClimbGameOver")
 }
 }
 
-
 //게임오버 화면 공유
 function shareResult(){
     //html2canvas를 사용
@@ -265,7 +264,8 @@ function copyImageToClipboard(imageData){
 
 
 const EndingType= {
-    noClimbGameOver: "noClimbGameOver"
+    noClimbGameOver: "noClimbGameOver",
+    newClimbGameOver: "newClimbGameOver"
 };
 
 // 엔딩내용 정의
@@ -275,7 +275,13 @@ const endingMessages = {
             <p>클토(클라이밍에 미친토끼)는 오늘만을 기다려왔습니다.</p>
             <p>이어하기를 눌러서 클라이밍을 하러가세요.</p>
             <p1>주의 : 이 게임은 게임오버!가 상당히 자주 일어납니다.</p1>
-            <br></br>`
+            <br></br>`,
+    [EndingType.newClimbGameOver]: `
+            <p>클라이밍가방을 안가져와서 게임오버</p>
+            <p>클토는 너무 신나서 정작 준비물을 깜빡했습니다.</p>
+            <p>이어하기를 눌러서 다시 클라이밍을 하러 가세요.</p>
+            <p1>주의 : 이 게임은 게임오버!가 상당히 자주 일어납니다.</p1>
+            <br></br>`        
 };
 
 //엔딩 내용 로컬 스트리지에 저장하는 함수
@@ -311,6 +317,43 @@ function newClimb() {
      // 이전 게임에서의 게임 오버 횟수 불러오기
     let gameOverCount = parseInt(localStorage.getItem("gameOverCount")) || 0;
     console.log("게임 오버 횟수", gameOverCount);
+
+    // 확률 계산
+    let gameProbability;
+    if (gameOverCount === 0) {
+        gameProbability = 1; // 100%
+    } else if (gameOverCount === 1) {
+        gameProbability = 0.5; // 50%
+    } else if (gameOverCount === 2) {
+        gameProbability = 0.25; // 25%
+    } else if (gameOverCount === 3) {
+        gameProbability = 0.12; // 12%
+    } else {
+        gameProbability = 0.01; // 그 이후는 1%로 고정
+    }
+
+    // 0부터 1사이의 무작위한 값 생성
+    let randomNumber = Math.random();
+
+    // 현재 확률로 게임 오버 또는 모달창 닫기
+    try {
+        if (randomNumber < gameProbability) {
+            // 게임 오버 횟수 증가
+            gameOverCount++;
+
+            // 게임 오버 횟수 로컬에 저장
+            localStorage.setItem("gameOverCount", gameOverCount);
+
+            // 엔딩 타입 저장
+            saveEndingContent("newClimbGameOver");
+
+            // 게임 오버 페이지로 이동
+            window.open("game-over.html", "_self");
+        }
+    } finally {
+        // 클라이밍 모달창 닫기
+        closeGameModal();
+    }
     
 }
 
@@ -334,6 +377,10 @@ window.onload = function() {
     gameGoScreen.style.opacity = 1; // 요소를 서서히 보이게 함
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> test
 function miniGame(){
     window.open("miniGame.html","_self");
 }

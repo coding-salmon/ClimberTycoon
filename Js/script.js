@@ -377,10 +377,6 @@ window.onload = function() {
     gameGoScreen.style.opacity = 1; // 요소를 서서히 보이게 함
 };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> test
 function miniGame(){
     window.open("miniGame.html","_self");
 }

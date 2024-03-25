@@ -63,12 +63,6 @@ class MainScene extends Phaser.Scene {
         this.gameOverText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'Game Over', { fontSize: '3rem', fill: '#ffffff' }).setOrigin(0.5);
         this.gameOverText.setVisible(false);
 
-        // 사용자가 화면을 클릭할 때 새 돌을 생성합니다.
-        this.input.on('pointerdown', (pointer) => {
-            if (this.readyForNextRock && !this.gameOver) {
-                this.spawnRandomRock(pointer.x);
-            }
-        });
     
 
         //화면 중앙 y축 위치 설정
@@ -100,7 +94,9 @@ class MainScene extends Phaser.Scene {
                 rock.body.setAllowGravity(true); // 중력 활성화
             }
         });
-    }spawnRandomRock(xPosition) {
+    }
+    
+    spawnRandomRock(xPosition) {
         // 새 돌을 생성할 준비가 되지 않았거나 게임이 오버된 상태라면 함수 종료
         if (!this.readyForNextRock || this.gameOver) return;
     
@@ -140,7 +136,8 @@ class MainScene extends Phaser.Scene {
         this.physics.world.on('worldbounds', (body) => {
             if (!this.gameOver && body.gameObject === rock && this.readyForNextRock) {
                 this.readyForNextRock = false; // 다음 돌 생성 준비 상태 변경
-                // 여기에서 새 돌을 생성하려면 spawnRandomRock 호출 대신 적절한 로직 필요
+                this.spawnRandomRock(); // 새 돌 생성
+
             }
         });
     }
@@ -176,6 +173,16 @@ class MainScene extends Phaser.Scene {
                 this.gameOver = true;
             }
         });
+
+        // 생성된 홀드가 오버라인에 걸려있는지 확인하고 게임 오버 처리
+    let holdOverLine = this.rocks.getChildren().some(rock => rock.y + rock.displayHeight / 2 > this.cameras.main.height * 0.2);
+    if (holdOverLine) {
+        setTimeout(() => {
+            if (holdOverLine && !this.gameOver) {
+                this.gameOver = true;
+            }
+        }, 3000); // 3초 후에 게임 오버 처리
+    }
 
         if (this.gameOver) {
             this.physics.pause(); // 모든 물리적 움직임을 멈춤

@@ -71,9 +71,14 @@ class MainScene extends Phaser.Scene {
     }
 
     spawnRock(x, y, key, desiredSize){
-    let rock = this.physics.add.image(x, y, key).setInteractive;
+    let rock = this.physics.add.image(x, y, key).setInteractive().setScale(desiredSize / 300);
+    rock.body.setEnable(false); // 물리 시스템 비활성화로 시작
+    
     this.input.setDraggable(rock);
-        rock.setCircle(rock.width /2); // 원형 물리 바디 설정
+    rock.on('dragstart', (pointer)=> {
+        rock.body.setEnable(true); // 드래그 시작 시 물리 시스템 활성화
+    });
+        rock.setCircle(rock.width / 2);
         rock.setCollideWorldBounds(true); // 화면 경계와의 충돌 활성화
         rock.setBounce(0.5); // 바운스 설정
 
@@ -87,16 +92,22 @@ class MainScene extends Phaser.Scene {
         this.physics.moveTo(rock, pointer.x, this.sys.game.config.height, 200); 
     });
 
+    rock.body.setCollideWorldBounds(true);
+
     //다음 돌 생성 준비
     rock.body.onWorldBounds =true; //화면 경계와 닿았는지 감지
+    
     this.physics.world.on('worldbounds', (body) => {
         //현재 돌이 화면 하단에 닿았는지 확인
 
-        if(body.gameObject === rock && this.nextRock <=3){
+        if(body.gameObject === rock && this.nextRock <=6){
             this.nextRock++; // 다음 돌 준비
-            this.spawnRock(window.innerWidth /2, 100, 'rock' + this.nextRock); //다음 돌 생성
+            this.time.delayedCall(100,() => {
+                this.spawnRock(window.innerWidth /2, 100, 'rock' + this.nextRock, this.nextRock * 10); //다음 돌 생성
+            },[], this);
+           
         }
-    });
+    }, this);
 }
 
 

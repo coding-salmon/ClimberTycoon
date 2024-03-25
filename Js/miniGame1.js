@@ -30,6 +30,7 @@ class MainScene extends Phaser.Scene {
     constructor() {
         super({ key: 'MainScene' });
         this.nextRock = 1; //다음에 생성될 돌의 번호 초기화
+        this.gameOver = false; // 게임 오버 상태를 추적하는 변수 추가
     }
 
     preload(){
@@ -45,16 +46,39 @@ class MainScene extends Phaser.Scene {
 
     create() {
 
-        // 돌 생성 및 드래그 가능 설정
-        this.rock = this.physics.add.image(400, 300, 'rock1').setInteractive();
-        this.input.setDraggable(this.rock);
+        //화면 중앙 y축 위치 설정
+        const startX = this.cameras.main.width /2;
 
-        //돌 생성 및 드래그 가능 설정
-    this.input.on('drag', (pninter, gameObject, dragX, dragY) =>{
+        // 돌 생성 및 드래그 가능 설정
+        this.rock = this.physics.add.image(startX, 0, 'rock1').setInteractive();
+        this.input.setDraggable(this.rock);
+        this.rock.body.setAllowGravity(false);
+
+        //드래그 이벤트 처리
+    this.input.setDraggable(this.rock);    
+    this.input.on('drag', (pointer, gameObject, dragX, dragY) =>{
         gameObject.x =dragX; // 드래그하여 x축 위치 조정
+        if(!gameObject.body.setAllowGravity){
+            gameObject.body.setAllowGravity(true); //중력작용
+        }
     });
 
+
+    //왼쪽 클릭 이벤트 처리 
+    this.input.on('pointerdown',(pointer)=>{
+        if(!this.rock.body.setAllowGravity){
+            this.rock.x =pointer.x;
+            this.rock.body.setAllowGravity(true); // 중력작용
+        }
+    });
+
+
+
     this.spawnRandomRock();// 첫돌 랜덤 생성
+
+    //게임오버 텍스트 생성 
+    this.gameOverText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'Game Over', { fontSize: '3rem', fill: '#ffffff' }).setOrigin(0.5);
+    this.gameOverText.setVisible(false);
 }
     spawnRandomRock(){
 
@@ -74,7 +98,7 @@ class MainScene extends Phaser.Scene {
          let desiredSize = parseInt(rockNumber) * 10; // 문자열을 숫자로 변환 후 크기 계산
         
         //선택된 돌 생성
-        this.spawnRock(window.innerWidth / 2, 0, rockKey, desiredSize);
+        this.spawnRock(this.cameras.main.width / 2, 0, rockKey, desiredSize);
     }
 
     spawnRock(x, y, key, desiredSize){

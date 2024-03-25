@@ -46,11 +46,13 @@ class MainScene extends Phaser.Scene {
 
     create() {
 
+        this.rocks = this.physics.add.group();
+
         //화면 중앙 y축 위치 설정
         const startX = this.cameras.main.width /2;
 
         // 돌 생성 및 드래그 가능 설정
-        this.rock = this.physics.add.image(startX, 0, 'rock1').setInteractive();
+        
         this.rock.body.setAllowGravity(false); //초기에 중력 비활성화
 
         this.input.setDraggable(this.rock);
@@ -102,6 +104,8 @@ class MainScene extends Phaser.Scene {
         
         //선택된 돌 생성
         this.spawnRock(this.cameras.main.width / 2, 0, rockKey, rockNumber,desiredSize);
+         // 생성된 돌을 그룹에 추가
+        this.rocks.add(rock);
     }
 
     spawnRock(x, y, key,  rockNumber, desiredSize){
@@ -170,7 +174,7 @@ class MainScene extends Phaser.Scene {
         }
 
         // 모든 돌의 위치 체크하여 70% 이상에 도달했는지 확인
-        let rocksAboveLine = this.physics.world.getAll().filter(rock => rock.y < this.cameras.main.height * 0.3);
+        let rocksAboveLine = this.rocks.getChildren().filter(rock => rock.y < this.cameras.main.height * 0.3);
         if (rocksAboveLine.length> 0){
             this.gameOver = true;
             this.physics.pause(); //모든 물리적인 움직인 멈춤

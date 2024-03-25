@@ -59,15 +59,19 @@ class MainScene extends Phaser.Scene {
                                     '5', '5',
                                     '6'];
 
-        let randomIndex = Math.floor(Math.random() * rocksProbabilities.length);    
-        let rockKey = 'rock' + rocksProbabilities[randomIndex]; //예 : rock1 rock2 rock3 ...
+        let randomIndex = Math.floor(Math.random() * rocksProbabilities.length);
+        let rockNumber = rocksProbabilities[randomIndex]; // 예: '1', '2', '3', ...    
+        let rockKey = 'rock' + rockNumber; // 예: 'rock1', 'rock2', ...
+
+         // 돌 번호에 따른 크기 계산 (1돌 10px, 2돌 20px, ..., 6돌 60px)
+         let desiredSize = parseInt(rockNumber) * 10; // 문자열을 숫자로 변환 후 크기 계산
         
         //선택된 돌 생성
-        this.spawnRock(window.innerWidht / 2, 0, rockKey);
+        this.spawnRock(window.innerWidth / 2, 0, rockKey, desiredSize);
     }
 
-    spawnRock(x, y, key){
-    let rock = this.physics.add.image(x, y, key).setInteractive();
+    spawnRock(x, y, key, desiredSize){
+    let rock = this.physics.add.image(x, y, key).setInteractive;
     this.input.setDraggable(rock);
         rock.setCircle(rock.width /2); // 원형 물리 바디 설정
         rock.setCollideWorldBounds(true); // 화면 경계와의 충돌 활성화

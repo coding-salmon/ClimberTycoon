@@ -24,6 +24,10 @@ function startGame1() {
     
 
     var game1 = new Phaser.Game(config1);
+
+    // 홀드 생성 위치를 설정하여 spawnRandomRock 호출
+    var holdSpawnX = config1.width / 2; // 홀드가 생성될 x 위치
+    MainScene.spawnRandomRock(holdSpawnX);
 }
 
 class MainScene extends Phaser.Scene {

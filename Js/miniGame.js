@@ -31,8 +31,8 @@ function startGame() {
 // 여기에 게임 시작 로직을 구현합니다.
     var config = {
         type: Phaser.AUTO,
-        width: window.innerWidth > 800 ? 800 :350, 
-        height: window.innerHeight > 800 ? 600 : 600,
+        width: window.innerWidth > 800 ? 800 :350,  
+        height: window.innerHeight > 700 ? 700 : 500,
         parent: "gameWindow", 
         
         scene: {

@@ -46,46 +46,63 @@ class MainScene extends Phaser.Scene {
 
     create() {
 
-        this.rocks = this.physics.add.group();
+
+        //돌 관리할 그룹 생성
+        this.rocks = this.physics.add.group({
+            setCollideWorldBounds:true,
+            bounceX:0.5,
+            bounceY:0.5
+        });
+
+         //게임오버 지점에 실선 그리기
+         let lineY = this.cameras.main.height * 0.7;
+        this.add.graphics().lineStyle(2, 0xff0000,1).lineBetween(0, lineY, this.cameras.main.width, lineY)
+
+        //게임오버 텍스트 생성 
+        this.gameOverText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'Game Over', { fontSize: '3rem', fill: '#ffffff' }).setOrigin(0.5);
+        this.gameOverText.setVisible(false);
+
+        this.spawnRandomRock();// 첫돌 랜덤 생성
 
         //화면 중앙 y축 위치 설정
         const startX = this.cameras.main.width /2;
 
-        // 돌 생성 및 드래그 가능 설정
-        
-        this.rock.body.setAllowGravity(false); //초기에 중력 비활성화
-
-        this.input.setDraggable(this.rock);
 
         //드래그 이벤트 처리
         this.input.on('drag', (pointer, gameObject, dragX, dragY) =>{
-        gameObject.x =dragX; // 드래그하여 x축 위치 조정
-        if(!gameObject.body.setAllowGravity){
-            gameObject.body.setAllowGravity(true); //중력작용
-        }
+            if(gameObject.getData('draggable')){
+                gameObject.x =dragX; // 드래그하여 x축 위치 조정
+            }
+        });
 
-        //게임오버 지점에 실선 그리기
-        let lineY = this.cameras.main.height * 0.7;
-        this.add.graphics().lineStyle(2, 0xff0000,1).lineBetween(0, lineY, this.cameras.main.width, lineY)
-    });
-
-
-    //왼쪽 클릭 이벤트 처리 
-    this.input.on('pointerdown',(pointer)=>{
-        if(!this.rock.body.allowGravity){
-            this.rock.x =pointer.x;
-            this.rock.body.setAllowGravity(true); // 중력작용
-        }
-    });
+        //드래그 종료 이벤트 
+        this.input.on('dragend', (pointer, gameObject) => {
+            if (gameObject.getData('draggable')) {
+                gameObject.setData('draggable', false); // 드래그 끝날 때 드래그 불가능으로 설정
+                gameObject.body.setAllowGravity(true); // 중력 활성화하여 자유 낙하 시작
+            }
+        });
 
 
-    this.spawnRandomRock();// 첫돌 랜덤 생성
-
-    //게임오버 텍스트 생성 
-    this.gameOverText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'Game Over', { fontSize: '3rem', fill: '#ffffff' }).setOrigin(0.5);
-    this.gameOverText.setVisible(false);
-}
+        //왼쪽 클릭 이벤트 처리 
+        this.input.on('pointerdown',(pointer, gameObject)=>{
+            let rock = this.rocks.getChildren().find(rock => rock.getData('isInitial'));    
+            if (rock && !rock.body.allowGravity) {
+                rock.x = pointer.x; // 클릭 위치로 돌 이동
+                rock.setData('isInitial', false); // 클릭으로 이동 완료 상태 표시
+                rock.body.setAllowGravity(true); // 중력 활성화
+            }
+        });
+    }
     spawnRandomRock(){
+
+        let x = this.cameras.main.width / 2;
+        let y = 100; // 시작 Y 위치는 필요에 따라 조정
+        let rock = this.rocks.create(x, y, 'rockTexture');
+        rock.setData('isInitial', true); // 초기 생성된 돌임을 표시
+        rock.setData('draggable', true); // 드래그 가능 상태로 설정
+        rock.body.setAllowGravity(false); // 처음에는 중력 비활성화
+        this.input.setDraggable(rock, true); // 돌을 드래그 가능하게 설정
 
         //돌 번호에 대한 확률 가중치 설정
         let rocksProbabilities = [  '1', '1', '1', '1', '1', '1',
@@ -104,32 +121,27 @@ class MainScene extends Phaser.Scene {
         
         //선택된 돌 생성
         this.spawnRock(this.cameras.main.width / 2, 0, rockKey, rockNumber,desiredSize);
-         // 생성된 돌을 그룹에 추가
-        this.rocks.add(rock);
+    
     }
 
     spawnRock(x, y, key,  rockNumber, desiredSize){
     let rock = this.physics.add.image(x, y, key).setInteractive();
     rock.setData('rockNumber', rockNumber);
+    rock.setData('draggable', true); // 드래그 가능 상태로 설정
 
     //원본 이미지 크기 대비 원하는 크기로 스케일 조정
     let scale = desiredSize / 300; //원본 크기가 300*300 픽셀
-    rock.setScale(scale);
-    rock.setCircle(rock.width / 2);
-    rock.setBounce(0.5); // 바운스 설정
-    rock.setCollideWorldBounds(true); // 화면 경계와의 충돌 활성화
-    rock.body.setAllowGravity(true); // 물리 시스템 비활성화로 시작
-
-
-    this.input.setDraggable(rock);
-    rock.on('drag', (pointer, gameObject, dragX, dragY)=> {
-       gameObject.x = dragX; // 드래그 시작 시 물리 시스템 활성화
-
+    rock.setScale(scale).setCircle(desiredSize / 2); // 돌의 원형 충돌 범위 설정
+    rock.setBounce(0.5).setCollideWorldBounds(true); // 바운스 설정 및 화면 경계와의 충돌 활성화
+    rock.body.setAllowGravity(false); //처음에는 중력 비활성화
+    this.input.setDraggable(rock);    
+      // 생성된 돌을 그룹에 추가
+    this.rocks.add(rock);
     
-    });
-    
-    // 추가: 모든 돌들이 서로 충돌할 수 있도록 설정
-    this.physics.add.collider(rock, this.physics.world.getAll(), this.mergeRocks, null, this);
+
+
+    //모든 돌들이 서로 충돌할 수 있도록 설정
+    this.physics.add.collider(this.rocks, this.rocks, this.mergeRocks, null, this);
 
     
     //다음 돌 생성 준비
@@ -139,6 +151,7 @@ class MainScene extends Phaser.Scene {
             this.spawnRandomRock();
         }
     });
+    return rock;
 }
 
     mergeRocks(rock1, rock2){
@@ -151,11 +164,11 @@ class MainScene extends Phaser.Scene {
         if(rockNumber1 === rockNumber2){
             //새로운 돌의 번호 계산
 
-            let newRockNumber = rockNumber +1;
+            let newRockNumber = rockNumber1 +1;
             let rockKey = 'rock' + newRockNumber;
 
             //새로운 돌의 위치를 계산 (먼저 떨어진 돌의 위치와 새돌의 약간 중간쯤)
-            let newX = (rock1.x +rock2.y)/2; 
+            let newX = (rock1.x +rock2.x)/2; 
             let newY = Math.min(rock1.y, rock2.y)-20;
 
             //기존 두돌을 제거

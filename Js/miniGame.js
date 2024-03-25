@@ -220,8 +220,12 @@ function gameOver(finalScore) {
 //         }
 //     );
 //     bufferLoader.load();
-// 
 
+
+
+function restartGame() {
+    window.open("miniGame.html", "_self");
+}
 
 function goHomeModal(){
     document.getElementById("goHomeModal").style.display='block';
@@ -236,3 +240,4 @@ function closeGoHomeModal(){
 function goHome(){
     window.open("climber-Tycoon.html","_self");
 }
+

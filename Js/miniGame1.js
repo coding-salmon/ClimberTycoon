@@ -31,6 +31,7 @@ class MainScene extends Phaser.Scene {
         super({ key: 'MainScene' });
         this.nextRock = 1; //다음에 생성될 돌의 번호 초기화
         this.gameOver = false; // 게임 오버 상태를 추적하는 변수 추가
+        this.readyForNextRock = true; // 다음 돌을 생성할 준비가 되었는지 나타내는 플래그입니다.
     }
 
     preload(){
@@ -55,14 +56,20 @@ class MainScene extends Phaser.Scene {
         });
 
          //게임오버 지점에 실선 그리기
-         let lineY = this.cameras.main.height * 0.7;
+         let lineY = this.cameras.main.height * 0.2;
         this.add.graphics().lineStyle(2, 0xff0000,1).lineBetween(0, lineY, this.cameras.main.width, lineY)
 
         //게임오버 텍스트 생성 
         this.gameOverText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'Game Over', { fontSize: '3rem', fill: '#ffffff' }).setOrigin(0.5);
         this.gameOverText.setVisible(false);
 
-        this.spawnRandomRock();// 첫돌 랜덤 생성
+        // 사용자가 화면을 클릭할 때 새 돌을 생성합니다.
+        this.input.on('pointerdown', (pointer) => {
+            if (this.readyForNextRock && !this.gameOver) {
+                this.spawnRandomRock(pointer.x);
+            }
+        });
+    
 
         //화면 중앙 y축 위치 설정
         const startX = this.cameras.main.width /2;
@@ -93,106 +100,86 @@ class MainScene extends Phaser.Scene {
                 rock.body.setAllowGravity(true); // 중력 활성화
             }
         });
+    }spawnRandomRock(xPosition) {
+        // 새 돌을 생성할 준비가 되지 않았거나 게임이 오버된 상태라면 함수 종료
+        if (!this.readyForNextRock || this.gameOver) return;
+    
+        // 현재 돌의 번호에 맞는 키와 크기를 설정합니다.
+        let rockKey = 'rock' + this.nextRock; // 돌의 텍스처 키
+        let desiredSize = this.nextRock * 10; // 돌의 크기
+    
+        // 지정된 위치에 새 돌 생성
+        this.spawnRock(xPosition, 100, rockKey, this.nextRock, desiredSize);
+    
+        // 다음 돌 번호 업데이트 (최대값 6)
+        this.nextRock = this.nextRock >= 6 ? 1 : this.nextRock + 1;
+    
+        // 새 돌이 생성되었으니 다음 돌 생성 준비 상태를 false로 설정
+        this.readyForNextRock = false;
     }
-    spawnRandomRock(){
-
-        let x = this.cameras.main.width / 2;
-        let y = 100; // 시작 Y 위치는 필요에 따라 조정
-        let rock = this.rocks.create(x, y, 'rockTexture');
-        rock.setData('isInitial', true); // 초기 생성된 돌임을 표시
-        rock.setData('draggable', true); // 드래그 가능 상태로 설정
-        rock.body.setAllowGravity(false); // 처음에는 중력 비활성화
-        this.input.setDraggable(rock, true); // 돌을 드래그 가능하게 설정
-
-        //돌 번호에 대한 확률 가중치 설정
-        let rocksProbabilities = [  '1', '1', '1', '1', '1', '1',
-                                    '2', '2', '2', '2', '2',
-                                    '3', '3', '3', '3',
-                                    '4', '4', '4',
-                                    '5', '5',
-                                    '6'];
-
-        let randomIndex = Math.floor(Math.random() * rocksProbabilities.length);
-        let rockNumber = parseInt(rocksProbabilities[randomIndex]); // 예: '1', '2', '3', ...    
-        let rockKey = 'rock' + rockNumber; // 예: 'rock1', 'rock2', ...
-
-         // 돌 번호에 따른 크기 계산 (1돌 10px, 2돌 20px, ..., 6돌 60px)
-         let desiredSize = rockNumber * 10; // 문자열을 숫자로 변환 후 크기 계산
-        
-        //선택된 돌 생성
-        this.spawnRock(this.cameras.main.width / 2, 0, rockKey, rockNumber,desiredSize);
+    spawnRock(x, y, key, rockNumber, desiredSize) {
+        let rock = this.physics.add.image(x, y, key).setInteractive();
+        rock.setData('rockNumber', rockNumber);
+        rock.setData('draggable', true); // 드래그 가능하게 설정
     
+        // 원본 이미지 크기 대비 원하는 크기로 스케일 조정
+        let scale = desiredSize / 300; // 가정: 원본 크기가 300x300 픽셀
+        rock.setScale(scale).setCircle(desiredSize / 2); // 돌의 원형 충돌 범위 설정
+    
+        rock.setBounce(0.5).setCollideWorldBounds(true); // 바운스 설정 및 화면 경계 충돌 활성화
+        rock.body.setAllowGravity(false); // 초기에는 중력 비활성화
+    
+        this.input.setDraggable(rock); // 돌을 드래그 가능하게 설정
+        this.rocks.add(rock); // 생성된 돌을 그룹에 추가
+    
+        // 모든 돌들이 서로 충돌할 수 있도록 설정
+        this.physics.add.collider(this.rocks, this.rocks, this.mergeRocks, null, this);
+    
+        // 화면 경계에 닿았을 때의 처리를 위한 설정
+        rock.body.onWorldBounds = true;
+        this.physics.world.on('worldbounds', (body) => {
+            if (!this.gameOver && body.gameObject === rock && this.readyForNextRock) {
+                this.readyForNextRock = false; // 다음 돌 생성 준비 상태 변경
+                // 여기에서 새 돌을 생성하려면 spawnRandomRock 호출 대신 적절한 로직 필요
+            }
+        });
     }
-
-    spawnRock(x, y, key,  rockNumber, desiredSize){
-    let rock = this.physics.add.image(x, y, key).setInteractive();
-    rock.setData('rockNumber', rockNumber);
-    rock.setData('draggable', true); // 드래그 가능 상태로 설정
-
-    //원본 이미지 크기 대비 원하는 크기로 스케일 조정
-    let scale = desiredSize / 300; //원본 크기가 300*300 픽셀
-    rock.setScale(scale).setCircle(desiredSize / 2); // 돌의 원형 충돌 범위 설정
-    rock.setBounce(0.5).setCollideWorldBounds(true); // 바운스 설정 및 화면 경계와의 충돌 활성화
-    rock.body.setAllowGravity(false); //처음에는 중력 비활성화
-    this.input.setDraggable(rock);    
-      // 생성된 돌을 그룹에 추가
-    this.rocks.add(rock);
-    
-
-
-    //모든 돌들이 서로 충돌할 수 있도록 설정
-    this.physics.add.collider(this.rocks, this.rocks, this.mergeRocks, null, this);
-
-    
-    //다음 돌 생성 준비
-    rock.body.onWorldBounds =true; //화면 경계와 닿았는지 감지
-    this.physics.world.on('worldbounds', (body) => {
-        if (!this.gameOver && body.gameObject === rock) {
-            this.spawnRandomRock();
-        }
-    });
-    return rock;
-}
 
     mergeRocks(rock1, rock2){
 
-        //돌의 번호를 기준으로 합체 검사
-        let rockNumber1 = rock1.getData('rockNumber');
-        let rockNumber2 = rock2.getData('rockNumber');
+        // 같은 번호의 돌이 부딪혔을 때 합체하는 로직
+        let rockNumber1 = parseInt(rock1.texture.key.replace('rock', ''));
+        let rockNumber2 = parseInt(rock2.texture.key.replace('rock', ''));
+
         
-        //같은 번호의 돌일 경우에만 합체
-        if(rockNumber1 === rockNumber2){
-            //새로운 돌의 번호 계산
+        if (rockNumber1 === rockNumber2 && rockNumber1 < 6) { // 최대 번호 제한
+            let newRockNumber = rockNumber1 + 1;
+            let newX = (rock1.x + rock2.x) / 2;
+            let newY = Math.min(rock1.y, rock2.y) - 20; // 새로운 돌의 위치 조정
 
-            let newRockNumber = rockNumber1 +1;
-            let rockKey = 'rock' + newRockNumber;
-
-            //새로운 돌의 위치를 계산 (먼저 떨어진 돌의 위치와 새돌의 약간 중간쯤)
-            let newX = (rock1.x +rock2.x)/2; 
-            let newY = Math.min(rock1.y, rock2.y)-20;
-
-            //기존 두돌을 제거
+            // 기존 돌 제거
             rock1.destroy();
             rock2.destroy();
 
-            //새로운 번호의 돌생성
-            this.spawnRock(newX, newY, rockKey, newRockNumber,newRockNumber * 10);
+            // 새로운 돌 생성
+            let newRockKey = 'rock' + newRockNumber;
+            let newSize = newRockNumber * 10;
+            this.spawnRock(newX, newY, newRockKey, newSize);
         }
     }
 
 
-    update(){
-        if(this.gameOver){
-            return; // 게임 오버 상태면 추가 로직을 수행하지 않음
-        }
+    update() {
+        // 게임 오버 조건 확인
+        this.rocks.getChildren().forEach(rock => {
+            if (rock.y < this.cameras.main.height * 0.3) { // 특정 높이 이상에 도달하면 게임 오버
+                this.gameOver = true;
+            }
+        });
 
-        // 모든 돌의 위치 체크하여 70% 이상에 도달했는지 확인
-        let rocksAboveLine = this.rocks.getChildren().filter(rock => rock.y < this.cameras.main.height * 0.3);
-        if (rocksAboveLine.length> 0){
-            this.gameOver = true;
-            this.physics.pause(); //모든 물리적인 움직인 멈춤
-            this.gameOverText.setVisible(true); //게임 오버 텍스트 표시
+        if (this.gameOver) {
+            this.physics.pause(); // 모든 물리적 움직임을 멈춤
+            this.gameOverText.setVisible(true); // 게임 오버 텍스트 표시
         }
-
-    };
+    }
 };

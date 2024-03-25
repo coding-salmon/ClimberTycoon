@@ -273,7 +273,7 @@ function feedback() {
     // 클립보드에 복사
     navigator.clipboard.writeText(resultsSummary).then(() => {
         alert("결과가 클립보드에 복사되었습니다. 개발자에게 공유해주세요!");
-        window.open(kakaoTalkLink, "_blank");
+        window.open("https://open.kakao.com/o/sHLQrBhg", "_blank");
     }).catch(err => {
         console.error('클립보드 복사 실패:', err);
         alert("결과를 클립보드에 복사하는 데 실패했습니다. 브라우저가 클립보드 기능을 지원하지 않을 수 있습니다.");

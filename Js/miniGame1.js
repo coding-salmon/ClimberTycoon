@@ -29,6 +29,7 @@ function startGame1() {
 class MainScene extends Phaser.Scene {
     constructor() {
         super({ key: 'MainScene' });
+        this.nextRock = 1; //다음에 생성될 돌의 번호 초기화
     }
 
     preload(){
@@ -71,7 +72,8 @@ class MainScene extends Phaser.Scene {
     }
 
     spawnRock(x, y, key, desiredSize){
-    let rock = this.physics.add.image(x, y, key).setInteractive().setScale(desiredSize / 300);
+    let rock = this.physics.add.image(x, y, key).setInteractive();
+    rock.setScale(desiredSize / 300);
     rock.body.setEnable(false); // 물리 시스템 비활성화로 시작
     
     this.input.setDraggable(rock);
@@ -103,7 +105,9 @@ class MainScene extends Phaser.Scene {
         if(body.gameObject === rock && this.nextRock <=6){
             this.nextRock++; // 다음 돌 준비
             this.time.delayedCall(100,() => {
-                this.spawnRock(window.innerWidth /2, 100, 'rock' + this.nextRock, this.nextRock * 10); //다음 돌 생성
+                if(this.nextRock<6){
+                this.spawnRandomRock(window.innerWidth /2, 100, 'rock' + this.nextRock, this.nextRock * 10); //다음 돌 생성
+                }
             },[], this);
            
         }

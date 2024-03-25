@@ -44,6 +44,12 @@ class MainScene extends Phaser.Scene {
 }
 
     create() {
+
+        // 돌 생성 및 드래그 가능 설정
+        this.rock = this.physics.add.image(400, 300, 'rock1').setInteractive();
+        this.input.setDraggable(this.rock);
+
+        //돌 생성 및 드래그 가능 설정
     this.input.on('drag', (pninter, gameObject, dragX, dragY) =>{
         gameObject.x =dragX; // 드래그하여 x축 위치 조정
     });
@@ -119,7 +125,7 @@ class MainScene extends Phaser.Scene {
     update(){
 
     
-    this.rock = setInteractive(); //돌이 인터렉티브하도록 설정
+    // this.rock = setInteractive(); //돌이 인터렉티브하도록 설정
 
     //돌을 드래그해서 위치 조절 가능하게 함
     this.input.setDraggable(this.rock);

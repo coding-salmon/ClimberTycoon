@@ -27,7 +27,7 @@ function startGame1() {
 
     // 홀드 생성 위치를 설정하여 spawnRandomRock 호출
     var holdSpawnX = config1.width / 2; // 홀드가 생성될 x 위치
-    MainScene.spawnRandomRock(holdSpawnX);
+    MainScene.spawnRandomRock(MainScene.scene.scenes[0], holdSpawnX);
 }
 
 class MainScene extends Phaser.Scene {
@@ -100,7 +100,7 @@ class MainScene extends Phaser.Scene {
         });
     }
     
-    spawnRandomRock(xPosition) {
+    static spawnRandomRock(scene, xPosition) {
         // 새 돌을 생성할 준비가 되지 않았거나 게임이 오버된 상태라면 함수 종료
         if (!this.readyForNextRock || this.gameOver) return;
     

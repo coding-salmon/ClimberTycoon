@@ -92,20 +92,30 @@ class MainScene extends Phaser.Scene {
                 this.prepareForNextRock();
             }
         });
-
-
-        //왼쪽 클릭 이벤트 처리 
+         //왼쪽 클릭 이벤트 처리 
         this.input.on('pointerdown',(pointer, gameObject)=>{
-            let rock = this.rocks.getChildren().find(rock => rock.getData('isInitial'));    
-            if (rock && !rock.body.allowGravity) {
-                rock.x = pointer.x; // 클릭 위치로 돌 이동
-                rock.setData('isInitial', false); // 클릭으로 이동 완료 상태 표시
-                rock.body.setAllowGravity(true); // 중력 활성화
+            if (this.rocks.contains(gameObject) && gameObject.getData('isInitial')) {
+                gameObject.x = pointer.x; // 클릭 위치로 돌 이동
+                gameObject.setData('isInitial', false); // 클릭으로 이동 완료 상태 표시
+                gameObject.body.setAllowGravity(true); // 중력 활성화
 
                 // 클릭으로 낙하시킨 후 5초 뒤 새 돌 생성 준비
                 this.prepareForNextRock();
             }
         });
+
+        // //왼쪽 클릭 이벤트 처리 
+        // this.input.on('pointerdown',(pointer, gameObject)=>{
+        //     let rock = this.rocks.getChildren().find(rock => rock.getData('isInitial'));    
+        //     if (rock && !rock.body.allowGravity) {
+        //         rock.x = pointer.x; // 클릭 위치로 돌 이동
+        //         rock.setData('isInitial', false); // 클릭으로 이동 완료 상태 표시
+        //         rock.body.setAllowGravity(true); // 중력 활성화
+
+        //         // 클릭으로 낙하시킨 후 5초 뒤 새 돌 생성 준비
+        //         this.prepareForNextRock();
+        //     }
+        // });
 
         // 5초 뒤 새 돌 생성 준비를 위한 함수
         this.prepareForNextRock = () => {
@@ -218,7 +228,7 @@ class MainScene extends Phaser.Scene {
                 }
     
                 // 돌이 특정 라인 위에 3초 이상 머무른 경우 게임 오버 처리
-                if (this.time.now - rock.getData('overLineTime') > 3000) {
+                if (this.time.now - rock.getData('overLineTime') > 5000) {
                     this.gameOver = true;
                 }
             } else {

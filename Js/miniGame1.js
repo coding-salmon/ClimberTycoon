@@ -67,8 +67,10 @@ class MainScene extends Phaser.Scene {
 
     
 
-        //화면 중앙 y축 위치 설정
+        //화면 중앙 x축 위치 설정
         const startX = this.cameras.main.width /2;
+        // 화면의 가장 위에서 돌이 시작하도록 y 위치를 0으로 설정
+        const startY = 0; 
 
 
         //드래그 이벤트 처리
@@ -118,10 +120,10 @@ class MainScene extends Phaser.Scene {
     }, 5000); // 5초 대기
 };
  // 초기 돌 생성
- this.spawnRandomRock(startX, 0); // 화면 중앙에 돌 생성
+ this.spawnRandomRock(startX, startY); // 화면 중앙에 돌 생성
 }
     
-    spawnRandomRock(xPosition) {
+    spawnRandomRock(xPosition, yPosition) {
         // 새 돌을 생성할 준비가 되지 않았거나 게임이 오버된 상태라면 함수 종료
         if (!this.readyForNextRock || this.gameOver) return;
 
@@ -144,7 +146,7 @@ class MainScene extends Phaser.Scene {
         let desiredSize = this.nextRock * 10; // 돌의 크기
     
         // 지정된 위치에 새 돌 생성
-        this.spawnRock(xPosition, 100, rockKey, this.nextRock, desiredSize);
+        this.spawnRock(xPosition, yPosition, rockKey, this.nextRock, desiredSize);
     
     
         // 새 돌이 생성되었으니 다음 돌 생성 준비 상태를 false로 설정

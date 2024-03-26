@@ -117,6 +117,8 @@ class MainScene extends Phaser.Scene {
         }
     }, 5000); // 5초 대기
 };
+ // 초기 돌 생성
+ this.spawnRandomRock(startX, 0); // 화면 중앙에 돌 생성
 }
     
     spawnRandomRock(xPosition) {

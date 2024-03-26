@@ -24,6 +24,7 @@ function startGame1() {
     
 
     var game1 = new Phaser.Game(config1);
+    console.log(this.rocks.getChildren());
 
 
 }
@@ -52,7 +53,7 @@ class MainScene extends Phaser.Scene {
 
         //돌 관리할 그룹 생성
         this.rocks = this.physics.add.group({
-            setCollideWorldBounds:true,
+            setCollideWorldBounds:true, // 이 그룹에 속한 모든 객체가 게임 세계의 경계와 충돌
             bounceX:0.5,
             bounceY:0.5
         });
@@ -74,24 +75,24 @@ class MainScene extends Phaser.Scene {
 
 
         // //드래그 이벤트 처리
-        // this.input.on('drag', (pointer, gameObject, dragX, dragY) =>{
-        //     if(gameObject.getData('draggable')){
-        //         gameObject.x =dragX; // 드래그하여 x축 위치 조정
-        //     }
-        // });
+        this.input.on('drag', (pointer, gameObject, dragX, dragY) =>{
+            if(gameObject.getData('draggable')){
+                gameObject.x =dragX; // 드래그하여 x축 위치 조정
+            }
+        });
 
         
 
-        // //드래그 종료 이벤트 
-        // this.input.on('dragend', (pointer, gameObject) => {
-        //     if (gameObject.getData('draggable')) {
-        //         gameObject.setData('draggable', false); // 드래그 끝날 때 드래그 불가능으로 설정
-        //         gameObject.body.setAllowGravity(true); // 중력 활성화하여 자유 낙하 시작
+        //드래그 종료 이벤트 
+        this.input.on('dragend', (pointer, gameObject) => {
+            if (gameObject.getData('draggable')) {
+                gameObject.setData('draggable', false); // 드래그 끝날 때 드래그 불가능으로 설정
+                gameObject.body.setAllowGravity(true); // 중력 활성화하여 자유 낙하 시작
                 
-        //         // 낙하시킨 후 5초 뒤 새 돌 생성 준비
-        //         this.prepareForNextRock();
-        //     }
-        // });
+                // 낙하시킨 후 5초 뒤 새 돌 생성 준비
+                this.prepareForNextRock();
+            }
+        });
          //왼쪽 클릭 이벤트 처리 
         this.input.on('pointerdown',(pointer, gameObject)=>{
             if (this.rocks.contains(gameObject) && gameObject.getData('isInitial')) {

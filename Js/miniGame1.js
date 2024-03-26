@@ -24,16 +24,17 @@ function startGame1() {
     
 
     var game1 = new Phaser.Game(config1);
-    console.log(this.rocks.getChildren());
+    
 
 
 }
 
 class MainScene extends Phaser.Scene {
     constructor() {
-        super({ key: 'MainScene' }); //장면의 킬 설정
+        super({ key: 'MainScene' }); //장면의 키 설정
         this.nextRock = 1; //다음에 생성될 돌의 번호 초기화
         this.gameOver = false; // 게임 오버 상태를 추적하는 변수 추가
+        this.overLineStartTime = null; // 특정 높이 이상으로 올라간 상태가 시작된 시간
         this.readyForNextRock = true; // 다음 돌을 생성할 준비가 되었는지 나타내는 플래그입니다.
     }
 
@@ -59,7 +60,7 @@ class MainScene extends Phaser.Scene {
         });
 
          //게임오버 지점에 실선 그리기
-         let lineY = this.cameras.main.height * 0.2;
+         let lineY = this.cameras.main.height * 0.1;
         this.add.graphics().lineStyle(2, 0xff0000,1).lineBetween(0, lineY, this.cameras.main.width, lineY)
 
         //게임오버 텍스트 생성 
@@ -71,7 +72,7 @@ class MainScene extends Phaser.Scene {
         //화면 중앙 x축 위치 설정
         const startX = this.cameras.main.width /2;
         // 화면의 가장 위에서 돌이 시작하도록 y 위치를 0으로 설정
-        const startY = 0; 
+        const startY = this.cameras.main.height * 0.1; 
 
 
         // //드래그 이벤트 처리
@@ -88,55 +89,40 @@ class MainScene extends Phaser.Scene {
             if (gameObject.getData('draggable')) {
                 gameObject.setData('draggable', false); // 드래그 끝날 때 드래그 불가능으로 설정
                 gameObject.body.setAllowGravity(true); // 중력 활성화하여 자유 낙하 시작
-                
-                // 낙하시킨 후 5초 뒤 새 돌 생성 준비
-                this.prepareForNextRock();
-            }
-        });
-         //왼쪽 클릭 이벤트 처리 
-        this.input.on('pointerdown',(pointer, gameObject)=>{
-            if (this.rocks.contains(gameObject) && gameObject.getData('isInitial')) {
-                gameObject.x = pointer.x; // 클릭 위치로 돌 이동
-                gameObject.setData('isInitial', false); // 클릭으로 이동 완료 상태 표시
-                gameObject.body.setAllowGravity(true); // 중력 활성화
 
-                // 클릭으로 낙하시킨 후 5초 뒤 새 돌 생성 준비
-                this.prepareForNextRock();
+                this.spawnRandomRock(startX, startY); // 화면 중앙에 돌 생성
+                
             }
         });
 
         // //왼쪽 클릭 이벤트 처리 
         // this.input.on('pointerdown',(pointer, gameObject)=>{
-        //     let rock = this.rocks.getChildren().find(rock => rock.getData('isInitial'));    
-        //     if (rock && !rock.body.allowGravity) {
-        //         rock.x = pointer.x; // 클릭 위치로 돌 이동
-        //         rock.setData('isInitial', false); // 클릭으로 이동 완료 상태 표시
-        //         rock.body.setAllowGravity(true); // 중력 활성화
+        //     if(gameObject.data.get('draggable')){    
+        //        gameObject.x = pointer.x; // 클릭 위치로 돌 이동
+        //     }
+        // });
+
+        // this.input.on('pointerup', (pointer, gameObject)=>{
+                
+        //     if(gameObject.getData('draggable')){
+        //         gameObject.setData('draggable', false); // 클릭으로 드래그 불가능으로 설정
+        //         gameObject.body.setAllowGravity(true); // 중력 활성화
 
         //         // 클릭으로 낙하시킨 후 5초 뒤 새 돌 생성 준비
         //         this.prepareForNextRock();
         //     }
         // });
 
-        // 5초 뒤 새 돌 생성 준비를 위한 함수
-        this.prepareForNextRock = () => {
-        // 새 돌 생성을 위한 타이머 설정
-        if (this.spawnTimer) clearTimeout(this.spawnTimer); // 기존 타이머가 있다면 취소
+        
+;
 
-        this.spawnTimer = setTimeout(() => {
-        // 게임 오버 상태가 아니라면 새 돌 생성
-        if (!this.gameOver) {
-            this.spawnRandomRock(startX, startY); // 새로운 홀드 생성
-        }
-    }, 5000); // 5초 대기
-};
+
  // 초기 돌 생성
  this.spawnRandomRock(startX, startY); // 화면 중앙에 돌 생성
 }
     
     spawnRandomRock(xPosition, yPosition) {
-        // 새 돌을 생성할 준비가 되지 않았거나 게임이 오버된 상태라면 함수 종료
-        if (!this.readyForNextRock || this.gameOver) return;
+    
 
         // 각 돌 번호에 대한 가중치 설정. 1번 돌이 가장 높은 확률로, 6번 돌이 가장 낮은 확률로 생성되도록 함
         const weights = [6, 5, 4, 3, 2, 1]; // 예를 들어, 1번 돌은 6/21의 확률로, 6번 돌은 1/21의 확률로 생성됨
@@ -154,14 +140,13 @@ class MainScene extends Phaser.Scene {
 
         // 현재 돌의 번호에 맞는 키와 크기를 설정합니다.
         let rockKey = 'rock' + this.nextRock; // 돌의 텍스처 키
-        let desiredSize = this.nextRock * 10; // 돌의 크기
+        let desiredSize = (this.nextRock * 10)*3; // 돌의 크기
     
         // 지정된 위치에 새 돌 생성
         this.spawnRock(xPosition, yPosition, rockKey, this.nextRock, desiredSize);
     
     
-        // 새 돌이 생성되었으니 다음 돌 생성 준비 상태를 false로 설정
-        this.readyForNextRock = false;
+    
     }
 
     //특정 위치에 돌을 생성하고 설정하는 함수
@@ -183,7 +168,7 @@ class MainScene extends Phaser.Scene {
         rock.body.setAllowGravity(false); // 초기에는 중력 비활성화
     
         this.input.setDraggable(rock); // 돌을 드래그 가능하게 설정
-        this.rocks.add(rock); // 생성된 돌을 그룹에 추가
+        
     
         // 모든 돌들이 서로 충돌할 수 있도록 설정
         this.physics.add.collider(this.rocks, this.rocks, this.mergeRocks, null, this);
@@ -216,32 +201,37 @@ class MainScene extends Phaser.Scene {
 
 
     update() {
-        // 게임 오버 조건 확인
+        if(!this.gameOver){//게임 오버 상태가 아니면 조건 검사를 진행
+        let rockOverLine = false;
+        
         this.rocks.getChildren().forEach(rock => {
-            // 특정 높이(여기서는 화면 높이의 20% 지점) 위에 도달한 돌이 있는지 확인
-            if (rock.y + rock.displayHeight / 2 > this.cameras.main.height * 0.2) {
-                // 해당 돌에 대해 'overLine' 데이터를 true로 설정
-                rock.setData('overLine', true);
-    
-                // 돌이 'overLine' 상태로 설정된 시간을 추적
-                if (!rock.getData('overLineTime')) {
-                    rock.setData('overLineTime', this.time.now);
-                }
-    
-                // 돌이 특정 라인 위에 3초 이상 머무른 경우 게임 오버 처리
-                if (this.time.now - rock.getData('overLineTime') > 5000) {
-                    this.gameOver = true;
-                }
-            } else {
-                // 돌이 특정 라인 아래로 내려간 경우 'overLine' 상태와 타이머를 초기화
-                rock.setData('overLine', false);
-                rock.setData('overLineTime', null);
+            // 특정 높이(여기서는 화면 높이의 10% 지점) 위에 도달한 돌이 있는지 확인
+            if (rock.y  > this.cameras.main.height * 0.1) {
+                rockOverLine = true;
             }
         });
-    
-        if (this.gameOver) {
-            this.physics.pause(); // 모든 물리적 움직임을 멈춤
-            this.gameOverText.setVisible(true); // 게임 오버 텍스트 표시
+
+         // 특정 높이 이상에 돌이 있을 경우
+        if (rockOverLine) {
+            if(this.rockOverLineTime === null){
+                //최초로 특정 높이 이상에 돌이 도달했을 때의 시간을 기록
+                this.rockOverLineTime = this.time.now;  
+            }
+            if(this.time.now - this.rockOverLineTime > 3000) {
+                // 상태가 3초 이상 유지되면 게임 오버
+                this.gameOver =true; //게임오버 상태로 전환
+            }
+        }else{
+              // 특정 높이 이상에 돌이 없을 경우 상태 시작 시간을 리셋
+                this.rockOverLineTime = null;
         }
     }
-};
+
+    if(this.gameOver){
+                this.physics.pause(); // 모든 물리적 움직임을 멈춤
+                this.gameOverText.setVisible(true); // 게임 오버 텍스트 표시
+            }
+        }
+        
+}
+    

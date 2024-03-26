@@ -115,7 +115,7 @@ class MainScene extends Phaser.Scene {
         this.spawnTimer = setTimeout(() => {
         // 게임 오버 상태가 아니라면 새 돌 생성
         if (!this.gameOver) {
-            this.spawnRandomRock(); // 새로운 돌 생성
+            this.spawnRandomRock(startX, startY); // 새로운 홀드 생성
         }
     }, 5000); // 5초 대기
 };
@@ -161,6 +161,8 @@ class MainScene extends Phaser.Scene {
         rock.setData('rockNumber', rockNumber);
         // 돌을 드래그 가능하게 설정합니다. 사용자가 마우스나 터치로 돌을 이동할 수 있게 합니다.
         rock.setData('draggable', true); // 드래그 가능하게 설정
+
+        rock.setData('isInitial', true); // 추가: 초기 홀드 식별을 위해
     
         // 원본 이미지 크기 대비 원하는 크기로 스케일 조정
         let scale = desiredSize / 300; // 가정: 원본 크기가 300x300 픽셀
@@ -175,16 +177,7 @@ class MainScene extends Phaser.Scene {
         // 모든 돌들이 서로 충돌할 수 있도록 설정
         this.physics.add.collider(this.rocks, this.rocks, this.mergeRocks, null, this);
     
-        // 화면 경계에 닿았을 때의 처리를 위한 설정
-        rock.body.onWorldBounds = true;
-
-        this.physics.world.on('worldbounds', (body) => {
-            if (!this.gameOver && body.gameObject === rock && this.readyForNextRock) {
-                this.readyForNextRock = false; // 다음 돌 생성 준비 상태 변경
-                this.spawnRandomRock(); // 새 돌 생성
-
-            }
-        });
+        
     }
 
     mergeRocks(rock1, rock2){

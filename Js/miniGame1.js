@@ -73,25 +73,25 @@ class MainScene extends Phaser.Scene {
         const startY = 0; 
 
 
-        //드래그 이벤트 처리
-        this.input.on('drag', (pointer, gameObject, dragX, dragY) =>{
-            if(gameObject.getData('draggable')){
-                gameObject.x =dragX; // 드래그하여 x축 위치 조정
-            }
-        });
+        // //드래그 이벤트 처리
+        // this.input.on('drag', (pointer, gameObject, dragX, dragY) =>{
+        //     if(gameObject.getData('draggable')){
+        //         gameObject.x =dragX; // 드래그하여 x축 위치 조정
+        //     }
+        // });
 
         
 
-        //드래그 종료 이벤트 
-        this.input.on('dragend', (pointer, gameObject) => {
-            if (gameObject.getData('draggable')) {
-                gameObject.setData('draggable', false); // 드래그 끝날 때 드래그 불가능으로 설정
-                gameObject.body.setAllowGravity(true); // 중력 활성화하여 자유 낙하 시작
+        // //드래그 종료 이벤트 
+        // this.input.on('dragend', (pointer, gameObject) => {
+        //     if (gameObject.getData('draggable')) {
+        //         gameObject.setData('draggable', false); // 드래그 끝날 때 드래그 불가능으로 설정
+        //         gameObject.body.setAllowGravity(true); // 중력 활성화하여 자유 낙하 시작
                 
-                // 낙하시킨 후 5초 뒤 새 돌 생성 준비
-                this.prepareForNextRock();
-            }
-        });
+        //         // 낙하시킨 후 5초 뒤 새 돌 생성 준비
+        //         this.prepareForNextRock();
+        //     }
+        // });
          //왼쪽 클릭 이벤트 처리 
         this.input.on('pointerdown',(pointer, gameObject)=>{
             if (this.rocks.contains(gameObject) && gameObject.getData('isInitial')) {
